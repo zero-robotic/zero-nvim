@@ -1,4 +1,5 @@
--- Note: The order matters: require("mason") -> rquire("mason-lspconfig") -> require("lspconfig")
+-- Note: The order matters: require("mason") -> require("mason-lspconfig")
+-- Note: Using vim.lsp.config (Neovim 0.11+) instead of deprecated require("lspconfig")
 
 require('mason').setup({
     ui = {
@@ -14,10 +15,6 @@ require('mason-lspconfig').setup({
     -- A list of servers to automatically install if they're not already installed
     ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', "bashls" }
 })
-
-
--- Set different settings for different languages' LSP
-local lspconfig = require("lspconfig")
 
 -- Customized on_attach function
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -68,7 +65,8 @@ local on_attach = function(client, bufnr)
         end, bufopts)
 end
 
-lspconfig.pylsp.setup({
+-- Configure Python LSP
+vim.lsp.config('pylsp', {
     on_attach = on_attach,
     settings = {
         -- configure plugins in pylsp
@@ -81,8 +79,10 @@ lspconfig.pylsp.setup({
         },
     },
 })
+vim.lsp.enable('pylsp')
 
-lspconfig.lua_ls.setup({
+-- Configure Lua LSP
+vim.lsp.config('lua_ls', {
     on_attach = on_attach,
     settings = {
         Lua = {
@@ -102,24 +102,25 @@ lspconfig.lua_ls.setup({
         },
     },
 })
+vim.lsp.enable('lua_ls')
 
-lspconfig.bashls.setup({})
+-- Configure Bash LSP
+vim.lsp.config('bashls', {})
+vim.lsp.enable('bashls')
 
-lspconfig.rust_analyzer.setup({
-    -- source: https://rust-analyzer.github.io/manual.html#nvim-lsp
+-- Configure Rust Analyzer
+-- source: https://rust-analyzer.github.io/manual.html#nvim-lsp
+vim.lsp.config('rust_analyzer', {
     on_attach = on_attach,
 })
+vim.lsp.enable('rust_analyzer')
 
-lspconfig.clangd.setup({
-    on_attach = on_attach
-})
-
-
--- Case 1. For CMake Users
---     $ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
+-- Configure Clangd
+-- Case 1. For CMake Users: $ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
 -- Case 2. For Bazel Users, use https://github.com/hedronvision/bazel-compile-commands-extractor
-lspconfig.clangd.setup({
+vim.lsp.config('clangd', {
     on_attach = on_attach,
 })
+vim.lsp.enable('clangd')
 
 
