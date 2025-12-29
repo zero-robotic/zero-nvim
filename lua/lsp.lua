@@ -105,7 +105,9 @@ vim.lsp.config('lua_ls', {
 vim.lsp.enable('lua_ls')
 
 -- Configure Bash LSP
-vim.lsp.config('bashls', {})
+vim.lsp.config('bashls', {
+    on_attach = on_attach,
+})
 vim.lsp.enable('bashls')
 
 -- Configure Rust Analyzer
